@@ -26,7 +26,6 @@ public class Spark : MonoBehaviour {
         
         c.a = 1.0f;
         r.material.color = c;
-        timer -= Time.deltaTime;
-        if(timer < 0.0f) DestroyObject(this.gameObject);
+        
 	}
 }

@@ -32,7 +32,7 @@ public class Lookup : MonoBehaviour {
     public Vector3 GenVelocity()
     {
         int i = (int)Random.Range(0.0f, 360.0f);
-        return new Vector3(velocity[i].x, velocity[i].y, Random.Range(1.0f, 2.0f));
+        return new Vector3(velocity[i].x, velocity[i].y, Random.Range(0.8f, 1.2f));
     }
         
 }
