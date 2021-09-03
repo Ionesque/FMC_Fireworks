@@ -7,6 +7,7 @@ public class MouseTrace : MonoBehaviour
     Camera cam;
     Vector3 fingerPos;
     public GameObject shell;
+    public GameObject shellCrackle;
     Transform t;
 
     float[] heldTime = new float[8]
@@ -45,6 +46,16 @@ public class MouseTrace : MonoBehaviour
         false
     };
 
+    public AudioSource[] snd_Explosion = new AudioSource[4];
+    int snd_Explosion_Current = 0;
+    int snd_Explosion_Max = 4;
+
+    public AudioSource[] snd_Crackle = new AudioSource[5];
+    int snd_Crackle_Current = 0;
+    int snd_Crackle_Max = 5;
+
+
+
     private void Start()
     {
         cam = GetComponent<Camera>();
@@ -55,14 +66,16 @@ public class MouseTrace : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+        
 
         // Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
-
-
+        
         // This would cast rays only against colliders in layer 8.
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
         layerMask = ~layerMask;
+
+        
 
         if (Input.GetButton("Fire1"))
         {
@@ -71,7 +84,12 @@ public class MouseTrace : MonoBehaviour
                 //Debug.Log(mousePos.x);
                 //Debug.Log(mousePos.y);
                 Physics.Raycast(ray, out hit, 100f, layerMask);
-                if(!fired[0]) Instantiate(shell, hit.point, Quaternion.identity);
+                if (!fired[0])
+                {
+                    Instantiate(shell, hit.point, Quaternion.identity);
+                    FireSoundExplosion();
+                }
+                
                 fired[0] = true;
                 heldTime[0] += Time.deltaTime;
                 Debug.Log(heldTime[0]);
@@ -80,7 +98,8 @@ public class MouseTrace : MonoBehaviour
                     refireTime[0] -= Time.deltaTime;
                     if (refireTime[0] < 0.0f)
                     {
-                        Instantiate(shell, hit.point, Quaternion.identity);
+                        Instantiate(shellCrackle, hit.point, Quaternion.identity);
+                        FireSoundCrackle();
                         refireTime[0] = Random.Range(0.15f, 0.40f);
                     }
                 }
@@ -97,8 +116,17 @@ public class MouseTrace : MonoBehaviour
     }
 
     // See Order of Execution for Event Functions for information on FixedUpdate() and Update() related to physics queries
-    void FixedUpdate()
+    void FireSoundExplosion()
     {
-        
+        snd_Explosion[snd_Explosion_Current].Play();
+        snd_Explosion_Current++;
+        if (snd_Explosion_Current >= snd_Explosion_Max) snd_Explosion_Current = 0;
+    }
+
+    void FireSoundCrackle()
+    {
+        snd_Crackle[snd_Crackle_Current].Play();
+        snd_Crackle_Current++;
+        if (snd_Crackle_Current >= snd_Crackle_Max) snd_Crackle_Current = 0;
     }
 }
