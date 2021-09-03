@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class Global : MonoBehaviour
 {
+    public bool rainbow_mode = false;
+    
     // Start is called before the first frame update
     void Start()
     {
