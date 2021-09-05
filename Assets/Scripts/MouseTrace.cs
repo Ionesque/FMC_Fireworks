@@ -57,6 +57,9 @@ public class MouseTrace : MonoBehaviour
     int snd_Crackle_Current = 0;
     int snd_Crackle_Max = 5;
 
+    public AudioSource[] snd_Kitty = new AudioSource[6];
+    int snd_Kitty_Current = 0;
+    int snd_Kitty_Max = 5;
 
 
     private void Start()
@@ -91,7 +94,9 @@ public class MouseTrace : MonoBehaviour
                 {
                     if(g.kitty_mode)Instantiate(shellKitty, hit.point, Quaternion.identity);
                     else Instantiate(shell, hit.point, Quaternion.identity);
-                    FireSoundExplosion();
+                    float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
+                    FireSoundExplosion(soundPitch);
+                    if (g.kitty_mode) FireSoundKitty(soundPitch);
                 }
                 
                 fired[0] = true;
@@ -103,7 +108,8 @@ public class MouseTrace : MonoBehaviour
                     if (refireTime[0] < 0.0f)
                     {
                         Instantiate(shellCrackle, hit.point, Quaternion.identity);
-                        FireSoundCrackle();
+                        float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
+                        FireSoundCrackle(soundPitch);
                         refireTime[0] = Random.Range(0.15f, 0.40f);
                     }
                 }
@@ -120,17 +126,27 @@ public class MouseTrace : MonoBehaviour
     }
 
     // See Order of Execution for Event Functions for information on FixedUpdate() and Update() related to physics queries
-    void FireSoundExplosion()
+    void FireSoundExplosion(float pitch)
     {
+        snd_Explosion[snd_Explosion_Current].pitch = pitch;
         snd_Explosion[snd_Explosion_Current].Play();
         snd_Explosion_Current++;
         if (snd_Explosion_Current >= snd_Explosion_Max) snd_Explosion_Current = 0;
     }
 
-    void FireSoundCrackle()
+    void FireSoundCrackle(float pitch)
     {
+        snd_Kitty[snd_Kitty_Current].pitch = pitch;
         snd_Crackle[snd_Crackle_Current].Play();
         snd_Crackle_Current++;
         if (snd_Crackle_Current >= snd_Crackle_Max) snd_Crackle_Current = 0;
+    }
+
+    void FireSoundKitty(float pitch)
+    {
+        snd_Kitty[snd_Kitty_Current].pitch = pitch;
+        snd_Kitty[snd_Kitty_Current].Play();
+        snd_Kitty_Current++;
+        if (snd_Kitty_Current >= snd_Kitty_Max) snd_Kitty_Current = 0;
     }
 }
