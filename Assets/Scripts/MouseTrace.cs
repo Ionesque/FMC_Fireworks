@@ -7,8 +7,11 @@ public class MouseTrace : MonoBehaviour
     Camera cam;
     Vector3 fingerPos;
     public GameObject shell;
+    public GameObject shellKitty;
     public GameObject shellCrackle;
     Transform t;
+
+    Global g;
 
     float[] heldTime = new float[8]
     {
@@ -58,6 +61,7 @@ public class MouseTrace : MonoBehaviour
 
     private void Start()
     {
+        g = GameObject.Find("~Global").GetComponent<Global>();
         cam = GetComponent<Camera>();
     }
 
@@ -86,13 +90,14 @@ public class MouseTrace : MonoBehaviour
                 Physics.Raycast(ray, out hit, 100f, layerMask);
                 if (!fired[0])
                 {
-                    Instantiate(shell, hit.point, Quaternion.identity);
+                    if(g.kitty_mode)Instantiate(shellKitty, hit.point, Quaternion.identity);
+                    else Instantiate(shell, hit.point, Quaternion.identity);
                     FireSoundExplosion();
                 }
                 
                 fired[0] = true;
                 heldTime[0] += Time.deltaTime;
-                Debug.Log(heldTime[0]);
+                
                 if(heldTime[0] > 0.25f)
                 {
                     refireTime[0] -= Time.deltaTime;

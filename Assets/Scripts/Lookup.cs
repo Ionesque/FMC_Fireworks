@@ -29,6 +29,11 @@ public class Lookup : MonoBehaviour {
         }
     }
 
+    public Vector3 GenAngular(float min, float max) {
+        int i = (int)Random.Range(min, max);
+        return new Vector3(velocity[i].x, velocity[i].y, Random.Range(0.8f, 1.2f));
+    }
+
     public Vector3 GenVelocity()
     {
         int i = (int)Random.Range(0.0f, 360.0f);

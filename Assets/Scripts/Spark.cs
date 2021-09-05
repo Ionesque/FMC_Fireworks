@@ -10,50 +10,30 @@ public class Spark : MonoBehaviour {
     float gravity = 3.0f;
     Color c;
 
-    public Global g;
+    Global g;
+
+    public bool angular = false;
+    public float AngleRangeMin = 45.0f;
+    public float AngleRangeMax = 45.0f;
+    public float AngleVelocity = 1.0f;
 
 	// Use this for initialization
 	void Start () {
         Lookup l = GameObject.Find("~Lookup Table").GetComponent<Lookup>();
+        g = GameObject.Find("~Global").GetComponent<Global>();
         r = GetComponent<Renderer>();
-        sparkVelocity = l.GenVelocity() * Random.Range(0.9f, 1.1f); ;
-        int rand_c = (int)Random.Range(0.0f, 7.0f);
-        if (rainbow)
+        if (angular)
         {
-            switch (rand_c)
-            {
-                case (0):
-                    c = new Color(Random.Range(0.5f, 1.0f), 0.0f, 0.0f);
-                    break;
-                case (1):
-                    c = new Color(Random.Range(0.5f, 1.0f), Random.Range(0.25f, 0.75f), 0.0f);
-                    break;
-                case (2):
-                    c = new Color(Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f), 0.0f);
-                    break;
-                case (3):
-                    c = new Color(0.0f, Random.Range(0.5f, 1.0f), 0.0f);
-                    break;
-                case (4):
-                    c = new Color(0.0f, 0.0f, Random.Range(0.5f, 1.0f));
-                    break;
-                case (5):
-                    c = new Color(0.0f, Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f));
-                    break;
-                case (6):
-                    c = new Color(Random.Range(0.5f, 1.0f), 0.0f, Random.Range(0.5f, 1.0f));
-                    break;
-                default:
-                    Debug.Log("ERROR: Invalid color picked out of range");
-                    break;
-            }
+            sparkVelocity = l.GenAngular(AngleRangeMin, AngleRangeMax) * Random.Range(0.5f * AngleVelocity, 1.1f * AngleVelocity);
         }
         else
         {
-            c = new Color(Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f));
+            sparkVelocity = l.GenVelocity() * Random.Range(0.9f, 1.1f);
         }
+        c = g.ReturnColor();
 
-        
+
+
         r.material.color = c;
     }
 	
