@@ -80,7 +80,6 @@ public class MouseTrace : MonoBehaviour
         layerMask = ~layerMask;
 
         
-
         if (Input.GetButton("Fire1"))
         {
             Vector3 mousePos = Input.mousePosition;
