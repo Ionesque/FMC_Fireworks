@@ -9,6 +9,7 @@ public class MouseTrace : MonoBehaviour
     public GameObject shell;
     public GameObject shellKitty;
     public GameObject shellCrackle;
+    public GameObject shellDog;
     Transform t;
 
     Global g;
@@ -61,6 +62,9 @@ public class MouseTrace : MonoBehaviour
     int snd_Kitty_Current = 0;
     int snd_Kitty_Max = 5;
 
+    public AudioSource[] snd_Dog = new AudioSource[6];
+    int snd_Dog_Current = 0;
+    int snd_Dog_Max = 5;
 
     private void Start()
     {
@@ -92,11 +96,21 @@ public class MouseTrace : MonoBehaviour
                 Physics.Raycast(ray, out hit, 100f, layerMask);
                 if (!fired[0])
                 {
-                    if(g.kitty_mode)Instantiate(shellKitty, hit.point, Quaternion.identity);
-                    else Instantiate(shell, hit.point, Quaternion.identity);
                     float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
+                    if (g.kitty_mode)
+                    {
+                        Instantiate(shellKitty, hit.point, Quaternion.identity);
+                        FireSoundKitty(soundPitch);
+                    }
+                    else if (g.dog_mode)
+                    { 
+                        Instantiate(shellDog, hit.point, Quaternion.identity);
+                        FireSoundDog(soundPitch);
+                    }
+                    else Instantiate(shell, hit.point, Quaternion.identity);
+
+                    
                     FireSoundExplosion(soundPitch);
-                    if (g.kitty_mode) FireSoundKitty(soundPitch);
                 }
                 
                 fired[0] = true;
@@ -148,5 +162,13 @@ public class MouseTrace : MonoBehaviour
         snd_Kitty[snd_Kitty_Current].Play();
         snd_Kitty_Current++;
         if (snd_Kitty_Current >= snd_Kitty_Max) snd_Kitty_Current = 0;
+    }
+
+    void FireSoundDog(float pitch)
+    {
+        snd_Dog[snd_Dog_Current].pitch = pitch;
+        snd_Dog[snd_Dog_Current].Play();
+        snd_Dog_Current++;
+        if (snd_Dog_Current >= snd_Dog_Max) snd_Dog_Current = 0;
     }
 }

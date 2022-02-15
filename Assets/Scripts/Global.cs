@@ -9,6 +9,7 @@ public class Global : MonoBehaviour
 {
     public bool rainbow_mode = false;
     public bool kitty_mode = false;
+    public bool dog_mode = false;
     int rand_c = 0;
     bool exit1 = false;
     bool exit2 = false;
@@ -75,6 +76,11 @@ public class Global : MonoBehaviour
     public void SetKitty(bool i)
     {
         kitty_mode = i;
+    }
+
+    public void SetDog(bool i)
+    {
+        dog_mode = i;
     }
 
     public void SetQuit1(bool i)

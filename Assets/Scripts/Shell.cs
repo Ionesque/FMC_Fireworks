@@ -23,7 +23,7 @@ public class Shell : MonoBehaviour
     void Start()
     {
         g = GameObject.Find("~Global").GetComponent<Global>();
-        if(g.kitty_mode)
+        if(g.kitty_mode || g.dog_mode)
         {
             float z = Random.Range(0.0f, 360.0f);
             this.transform.localEulerAngles = new Vector3(0.0f, 0.0f, z);
