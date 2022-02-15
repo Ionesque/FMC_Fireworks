@@ -14,6 +14,8 @@ public class MouseTrace : MonoBehaviour
 
     Global g;
 
+    bool multiTouch = true;
+
     float[] heldTime = new float[8]
     {
         0.0f,
@@ -74,69 +76,91 @@ public class MouseTrace : MonoBehaviour
 
     void Update()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        string dbgStr = "Points: " + Input.touchCount + "X: ";
 
-        
+        //Ray ray;            // Ray to detect where to create the fireworks
+        // Information about where it hits
 
-        // Bit shift the index of the layer (8) to get a bit mask
-        int layerMask = 1 << 8;
-        
-        // This would cast rays only against colliders in layer 8.
-        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-        layerMask = ~layerMask;
+        int lastTouch = 0;
 
-        
-        if (Input.GetButton("Fire1"))
+        int touchTotal = Input.touchCount;
+
+        if(Input.GetMouseButton(0))
         {
-            Vector3 mousePos = Input.mousePosition;
-            {
-                //Debug.Log(mousePos.x);
-                //Debug.Log(mousePos.y);
-                Physics.Raycast(ray, out hit, 100f, layerMask);
-                if (!fired[0])
-                {
-                    float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
-                    if (g.kitty_mode)
-                    {
-                        Instantiate(shellKitty, hit.point, Quaternion.identity);
-                        FireSoundKitty(soundPitch);
-                    }
-                    else if (g.dog_mode)
-                    { 
-                        Instantiate(shellDog, hit.point, Quaternion.identity);
-                        FireSoundDog(soundPitch);
-                    }
-                    else Instantiate(shell, hit.point, Quaternion.identity);
+        //    touchTotal = 1;
+        }
 
-                    
-                    FireSoundExplosion(soundPitch);
-                }
-                
-                fired[0] = true;
-                heldTime[0] += Time.deltaTime;
-                
-                if(heldTime[0] > 0.25f)
+        for (int i = 0; i < touchTotal; i++)
+        {
+            //ray = cam.ScreenPointToRay(Input.GetTouch(i).position);
+            if (i > 7) break;
+            Ray ray = cam.ScreenPointToRay(Input.GetTouch(i).position);
+            RaycastHit hit;
+
+            int layerMask = 1 << 8;
+            layerMask = ~layerMask;
+
+            Vector3 mousePos = Input.GetTouch(i).position; //Input.GetTouch(i).position;
+
+            Physics.Raycast(ray, out hit, 100f, layerMask);
+            
+            dbgStr += Input.GetTouch(i).position;//  Input.GetTouch(i).position;
+            Debug.Log(dbgStr);
+            Debug.Log(hit.point);
+
+
+
+            if (!fired[i])
+            {
+                float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
+                if (g.kitty_mode)
                 {
-                    refireTime[0] -= Time.deltaTime;
-                    if (refireTime[0] < 0.0f)
-                    {
-                        Instantiate(shellCrackle, hit.point, Quaternion.identity);
-                        float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
-                        FireSoundCrackle(soundPitch);
-                        refireTime[0] = Random.Range(0.15f, 0.40f);
-                    }
+                    Instantiate(shellKitty, hit.point, Quaternion.identity);
+                    FireSoundKitty(soundPitch);
+                }
+                else if (g.dog_mode)
+                {
+                    Instantiate(shellDog, hit.point, Quaternion.identity);
+                    FireSoundDog(soundPitch);
+                }
+                else Instantiate(shell, hit.point, Quaternion.identity);
+
+
+                FireSoundExplosion(soundPitch);
+            }
+
+            fired[i] = true;
+            heldTime[i] += Time.deltaTime;
+            
+
+            if (heldTime[i] > 0.25f)
+            {
+                refireTime[i] -= Time.deltaTime;
+                if (refireTime[i] < 0.0f)
+                {
+                    Instantiate(shellCrackle, hit.point, Quaternion.identity);
+                    float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
+                    FireSoundCrackle(soundPitch);
+                    refireTime[i] = Random.Range(0.15f, 0.25f);
                 }
             }
+            lastTouch = i;
         }
+
+        for (int i=lastTouch; i<8; i++)
+        {
+            fired[i] = false;
+        }
+        /*
         else
         {
             heldTime[0] = 0.0f;
             fired[0] = false;
-        }
+        }*/
         
         //fingerPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position); //Mobile
-        fingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Desktop
+    
+        //fingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Desktop
     }
 
     // See Order of Execution for Event Functions for information on FixedUpdate() and Update() related to physics queries
