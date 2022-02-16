@@ -113,7 +113,7 @@ public class MouseTrace : MonoBehaviour
 
 
                 FireSoundExplosion(soundPitch);
-                Vibration.VibrateShort(1000);
+                Vibration.VibrateShort(200);
             }
 
             fired[i] = true;

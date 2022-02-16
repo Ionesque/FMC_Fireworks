@@ -22,6 +22,10 @@ public static class Vibration
         {
             vibrate.Call("vibrate", milliseconds);
         }
+        else
+        {
+            Handheld.Vibrate();
+        }
     }
 
     public static void Cancel()
