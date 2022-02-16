@@ -11,6 +11,7 @@ public class MouseTrace : MonoBehaviour
     public GameObject shellCrackle;
     public GameObject shellDog;
     Transform t;
+    
 
     Global g;
 
@@ -78,21 +79,11 @@ public class MouseTrace : MonoBehaviour
     {
         string dbgStr = "Points: " + Input.touchCount + "X: ";
 
-        //Ray ray;            // Ray to detect where to create the fireworks
-        // Information about where it hits
-
         int lastTouch = 0;
-
         int touchTotal = Input.touchCount;
-
-        if(Input.GetMouseButton(0))
-        {
-        //    touchTotal = 1;
-        }
 
         for (int i = 0; i < touchTotal; i++)
         {
-            //ray = cam.ScreenPointToRay(Input.GetTouch(i).position);
             if (i > 7) break;
             Ray ray = cam.ScreenPointToRay(Input.GetTouch(i).position);
             RaycastHit hit;
@@ -104,14 +95,9 @@ public class MouseTrace : MonoBehaviour
 
             Physics.Raycast(ray, out hit, 100f, layerMask);
             
-            dbgStr += Input.GetTouch(i).position;//  Input.GetTouch(i).position;
-            Debug.Log(dbgStr);
-            Debug.Log(hit.point);
-
-
-
-            if (!fired[i])
+            if(Input.GetTouch(i).phase == TouchPhase.Began)
             {
+                
                 float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
                 if (g.kitty_mode)
                 {
@@ -127,12 +113,13 @@ public class MouseTrace : MonoBehaviour
 
 
                 FireSoundExplosion(soundPitch);
+                Vibration.VibrateShort(1000);
             }
 
             fired[i] = true;
             heldTime[i] += Time.deltaTime;
             
-
+            
             if (heldTime[i] > 0.25f)
             {
                 refireTime[i] -= Time.deltaTime;
