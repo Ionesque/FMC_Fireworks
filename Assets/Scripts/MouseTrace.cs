@@ -97,7 +97,7 @@ public class MouseTrace : MonoBehaviour
             
             if(Input.GetTouch(i).phase == TouchPhase.Began)
             {
-                
+                Vibration.VibrateShort(100);
                 float soundPitch = 0.7f + ((hit.point.y + 4.5f) / 10.0f) * 0.4f;
                 if (g.kitty_mode)
                 {
@@ -113,7 +113,7 @@ public class MouseTrace : MonoBehaviour
 
 
                 FireSoundExplosion(soundPitch);
-                Vibration.VibrateShort(200);
+                
             }
 
             fired[i] = true;

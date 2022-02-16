@@ -171,9 +171,9 @@ PlayerSettings:
     Android: com.OneFlatPoly.FMCFireworks
     Standalone: com.OneFlatPolygon.FMCFireworksFun
   buildNumber: {}
-  AndroidBundleVersionCode: 10
-  AndroidMinSdkVersion: 28
-  AndroidTargetSdkVersion: 28
+  AndroidBundleVersionCode: 12
+  AndroidMinSdkVersion: 22
+  AndroidTargetSdkVersion: 22
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
